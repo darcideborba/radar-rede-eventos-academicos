@@ -33,7 +33,10 @@
       "Universidade Federal do Acre": "UFAC",
       "Não tenho": null,
       "não se aplica": null
-    }
+    },
+    "fuso_horario": "America/Fortaleza",
+    "filtro_agenda_pessoal": "",
+    "_nota_agenda": "Opcional: config/minha_agenda.ics (ou .csv com data;hora;sala) marca as sessões que você vai assistir. Eventos que não batem com a programação são ignorados, salvo se o título casar com filtro_agenda_pessoal (expressão regular)."
   },
   "pesquisador": {
     "nome_na_agenda": "NOME COMPLETO COMO APARECE NA AGENDA",

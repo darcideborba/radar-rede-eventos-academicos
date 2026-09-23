@@ -19,6 +19,7 @@ Você atuará como analista de redes profissionais e de dados. O objetivo é pre
 - Nome exatamente como aparece na programação, se o pesquisador participar do evento (para destacar as próprias sessões e excluí-lo das listas).
 - Três a oito eixos de interesse de pesquisa, em palavras-chave.
 - Se autorizar, acesso à própria conta LinkedIn aberta no navegador. Sem isso, o painel é gerado apenas com potenciais contatos.
+- Opcionalmente, a própria agenda do evento (exportação .ics do calendário ou lista data/hora/sala), para marcar as sessões que pretende assistir.
 
 ## Procedimento
 
@@ -46,7 +47,8 @@ Você atuará como analista de redes profissionais e de dados. O objetivo é pre
    - **C:** prováveis.
 7. **Planilha.** Abas: Resumo (com fórmulas), 1 - Rede na agenda, 1b - A verificar, 2 - Potenciais contatos. Cada aba tem uma coluna "Feito? / notas".
 8. **Painel:**
-   - **Cabeçalho:** nome do evento, três indicadores (pessoas da rede no evento, potenciais contatos, total com prioridade A) e destaque para as sessões do próprio pesquisador, com um botão que leva a elas.
+   - **Cabeçalho:** nome do evento e três indicadores (pessoas da rede no evento, potenciais contatos, total com prioridade A). As sessões do próprio pesquisador ficam destacadas no próprio cartão ("SUA SESSÃO"), sem quadro separado.
+   - **Agenda pessoal (opcional):** se o pesquisador fornecer a própria agenda (arquivo .ics ou lista data/hora/sala), marque as sessões que ele vai assistir com o selo "★ NA MINHA AGENDA", mostre-as mesmo sem contatos mapeados e ofereça um botão "Minha agenda" que filtra só essas sessões.
    - **Filtros:** dia, grupo (rede, potenciais), prioridade A/B/C, instituição (lista suspensa com todas as instituições, unificando grafias) e busca textual.
    - **Visão "Por horário":** dia, depois faixa de horário, depois cartões de sessão com sala, divisão e título. As pessoas aparecem como pílulas: cheias para a rede, tracejadas para potenciais, com a letra da prioridade. Sessões com alguém de prioridade A ganham uma faixa lateral.
    - **Visão "Por pessoa":** lista ordenada por prioridade, com a próxima aparição e uma caixa "já abordei" salva no navegador.

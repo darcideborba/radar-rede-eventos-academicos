@@ -67,6 +67,10 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .card .room{font-weight:600;color:var(--ink)}
 .card h3{font-size:14px;line-height:1.3;margin:0 0 9px;font-weight:600;text-wrap:balance}
 .tag{font:600 10.5px/1 "JetBrains Mono",monospace;padding:3px 6px;border-radius:4px;background:var(--surface2);color:var(--ink2);white-space:nowrap}
+.tag.agTag{background:var(--pB);color:var(--surface)}
+.card.isSched{box-shadow:0 0 0 2px var(--pB) inset}
+.card.isSched.isMine{box-shadow:none}
+.nobody{font-size:12.5px;color:var(--ink2);margin:0}
 .tag.mineTag{background:var(--mine);color:var(--surface)}
 .people{display:flex;flex-wrap:wrap;gap:5px}
 .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 9px 4px 5px;font-size:12.5px;line-height:1.2;cursor:pointer;border:1px solid transparent;background:var(--surface2);color:var(--ink);text-align:left}
@@ -109,11 +113,6 @@ a{color:var(--accent)}
   </div>
   <div class="stats" id="stats"></div>
  </div>
- <div class="mine" id="mine" hidden>
-  <div class="when" id="mineWhen"></div>
-  <div><strong id="mineTitle"></strong><p id="mineText"></p></div>
-  <button class="btn" id="goMine" type="button">Ver sessão</button>
- </div>
  <div class="controls" role="toolbar" aria-label="Filtros">
   <div class="seg" id="view" aria-label="Visão"><button type="button" data-v="agenda" aria-pressed="true">Por horário</button><button type="button" data-v="people" aria-pressed="false">Por pessoa</button></div>
   <div class="seg" id="days" aria-label="Dia"></div>
@@ -128,6 +127,7 @@ a{color:var(--accent)}
   <span><i class="pr A">A</i>Prioridade alta: sua sessão, papel de destaque ou forte aderência</span>
   <span><i class="pr B">B</i>Média</span>
   <span><i class="pr C">C</i>Complementar</span>
+  <span><span class="tag agTag">★</span> Sessão da sua agenda pessoal (opcional)</span>
  </div>
  <div id="out"></div>
  <p class="foot">Fonte: programação oficial do evento cruzada com a rede LinkedIn do próprio pesquisador. Na rede: prioridade A = na sua sessão ou em papel de destaque (coordenação, debate, painel, palestra); B = demais confirmados; C = correspondência provável, a conferir. Homônimos incertos ficam de fora e constam na planilha. A marcação "abordado" fica salva apenas neste navegador.</p>
@@ -142,7 +142,9 @@ const DAYS=[['all','Todos']].concat([...new Set(E.map(e=>e.d))].sort((a,b)=>(a.s
 document.getElementById('eyebrow').textContent=[M.evento,M.local,M.periodo].filter(Boolean).join(' · ');
 const LS='radar-'+(M.evento||'evento').replace(/\W+/g,'-').toLowerCase();
 const RANK={A:0,B:1,C:2};
-let S={view:'agenda',day:'all',g:'all',pr:{A:true,B:true,C:true},q:'',inst:''};
+let S={view:'agenda',day:'all',g:'all',pr:{A:true,B:true,C:true},q:'',inst:'',ag:false};
+const SCHED=(DATA.meta&&DATA.meta.agendadas)||[];
+const isSched=x=>SCHED.some(m=>m.d===x.d&&m.t===x.t&&m.rm===x.rm);
 let done={};try{done=JSON.parse(localStorage.getItem(LS+'-done')||'{}')}catch(e){}
 function saveDone(){try{localStorage.setItem(LS+'-done',JSON.stringify(done))}catch(e){}}
 try{const v=JSON.parse(localStorage.getItem(LS+'-ui')||'null');if(v){S={...S,...v,q:''}}}catch(e){}
@@ -162,46 +164,43 @@ function qOk(p,e){if(!S.q)return true;const q=norm(S.q);return norm(p.n+' '+p.af
  document.getElementById('stats').innerHTML=`<div class="stat"><b>${r.length}</b><span>da sua rede no evento</span></div><div class="stat"><b>${pp.length}</b><span>potenciais contatos</span></div><div class="stat"><b>${a}</b><span>com prioridade A</span></div>`})();
 // controls
 document.getElementById('days').innerHTML=DAYS.map(([k,l])=>`<button type="button" data-d="${k}">${l}</button>`).join('');
-document.getElementById('prios').innerHTML=['A','B','C'].map(k=>`<button type="button" class="chip" data-p="${k}"><i class="pr ${k}">${k}</i>${k==='A'?'Alta':k==='B'?'Média':'Compl.'}</button>`).join('');
+document.getElementById('prios').innerHTML=['A','B','C'].map(k=>`<button type="button" class="chip" data-p="${k}"><i class="pr ${k}">${k}</i>${k==='A'?'Alta':k==='B'?'Média':'Compl.'}</button>`).join('')+(SCHED.length?`<button type="button" class="chip" id="agChip" aria-pressed="false"><span class="tag agTag">★</span>Minha agenda (${SCHED.length})</button>`:'');
 function syncControls(){
  document.querySelectorAll('#view button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===S.view));
  document.querySelectorAll('#days button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.d===S.day));
  document.querySelectorAll('#grp button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.g===S.g));
- document.querySelectorAll('#prios button').forEach(b=>b.setAttribute('aria-pressed',S.pr[b.dataset.p]));
+ document.querySelectorAll('#prios button[data-p]').forEach(b=>b.setAttribute('aria-pressed',S.pr[b.dataset.p]));
+ const ag=document.getElementById('agChip');if(ag)ag.setAttribute('aria-pressed',!!S.ag);
 }
 document.getElementById('view').onclick=e=>{const b=e.target.closest('button');if(b){S.view=b.dataset.v;go()}};
 document.getElementById('days').onclick=e=>{const b=e.target.closest('button');if(b){S.day=b.dataset.d;go()}};
 document.getElementById('grp').onclick=e=>{const b=e.target.closest('button');if(b){S.g=b.dataset.g;go()}};
-document.getElementById('prios').onclick=e=>{const b=e.target.closest('button');if(b){S.pr[b.dataset.p]=!S.pr[b.dataset.p];go()}};
+document.getElementById('prios').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='agChip'){S.ag=!S.ag;if(S.ag)S.view='agenda';go();return}S.pr[b.dataset.p]=!S.pr[b.dataset.p];go()};
 document.getElementById('q').oninput=e=>{S.q=e.target.value;render()};
 (function(){const c={};P.forEach(p=>(p.ins||[]).forEach(i=>c[i]=(c[i]||0)+1));
  const sel=document.getElementById('inst');Object.keys(c).sort((a,b)=>a.localeCompare(b,'pt',{sensitivity:'base'})).forEach(i=>{const o=document.createElement('option');o.value=i;o.textContent=i+' ('+c[i]+')';sel.appendChild(o)});
  sel.onchange=e=>{S.inst=e.target.value;render()};})();
-if(MINES.length){const m0=MINES[0];const ids=new Set(E.filter(e=>isMine(e)).map(e=>e.i));const nr=[...ids].filter(i=>byId[i].g==='r').length,np=ids.size-nr;
- document.getElementById('mine').hidden=false;
- document.getElementById('mineWhen').innerHTML=MINES.map(m=>esc(m.d.slice(0,5)+' · '+m.t.slice(0,5))+'<br>'+esc(m.rm.split(' - ')[0])).join('<br><br>');
- document.getElementById('mineTitle').textContent=(MINES.length>1?'Suas sessões: ':'Sua sessão: ')+MINES.map(m=>m.s).join(' | ');
- document.getElementById('mineText').textContent='Seu papel: '+[...new Set(MINES.flatMap(m=>m.papeis))].join(', ')+'. Pessoas da sua rede nessas sessões: '+nr+'; potenciais contatos: '+np+'.';}
-document.getElementById('goMine').onclick=()=>{if(!MINES.length)return;S.view='agenda';S.day=MINES[0].d;S.g='all';S.pr={A:true,B:true,C:true};S.q='';S.inst='';document.getElementById('q').value='';document.getElementById('inst').value='';go();setTimeout(()=>{const el=document.querySelector('.card.isMine');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},30)};
 function go(){saveUI();syncControls();render()}
 function pill(p,e){return `<button type="button" class="pill ${p.g}${done[p.i]?' done':''}" data-i="${p.i}" title="${esc(p.n+' · '+(p.ins||[]).join(', '))}"><i class="pr ${p.p}">${p.p}</i>${esc(shortName(p.n))}${sigla(p)?` <span class="aff">${esc(sigla(p))}</span>`:''}${e.ro!=='Autor'?` <small>${esc(e.ro)}</small>`:''}</button>`}
 function render(){
  const out=document.getElementById('out');
  if(S.view==='people')return renderPeople(out);
  const ev=E.filter(e=>(S.day==='all'||e.d===S.day)&&pOk(byId[e.i])&&qOk(byId[e.i],e));
- if(!ev.length){out.innerHTML='<div class="empty">Nenhuma sessão com esses filtros. Ajuste o dia, o grupo ou a prioridade.</div>';return}
  const sess={};ev.forEach(e=>{const k=e.d+'|'+e.t+'|'+e.rm+'|'+e.s;(sess[k]=sess[k]||{d:e.d,t:e.t,rm:e.rm,s:e.s,dv:e.dv,ev:[]}).ev.push(e)});
+ if(!S.q&&!S.inst)SCHED.forEach(m=>{if(S.day!=='all'&&m.d!==S.day)return;if(Object.values(sess).some(s=>isSched(s)&&s.d===m.d&&s.t===m.t&&s.rm===m.rm))return;const k=m.d+'|'+m.t+'|'+m.rm+'|'+m.s;sess[k]={d:m.d,t:m.t,rm:m.rm,s:m.s,dv:m.dv,ev:[]}});
+ if(S.ag)Object.keys(sess).forEach(k=>{if(!isSched(sess[k]))delete sess[k]});
+ if(!Object.keys(sess).length){out.innerHTML='<div class="empty">Nenhuma sessão com esses filtros. Ajuste o dia, o grupo ou a prioridade.</div>';return}
  const byDay={};Object.values(sess).forEach(s=>{(byDay[s.d]=byDay[s.d]||{});(byDay[s.d][s.t]=byDay[s.d][s.t]||[]).push(s)});
  let h='';
  Object.keys(byDay).sort((a,b)=>dkey({d:a,t:''}).localeCompare(dkey({d:b,t:''}))).forEach(d=>{
   const slots=byDay[d];const n=new Set(Object.values(slots).flat().flatMap(s=>s.ev.map(e=>e.i))).size;
   h+=`<div class="day"><h2>${DAYLONG[d]||d}</h2><span>${n} pessoa${n>1?'s':''}</span></div>`;
   Object.keys(slots).sort().forEach(t=>{
-   const list=slots[t].map(s=>{const seen=new Set();s.ev=s.ev.filter(e=>!seen.has(e.i)&&seen.add(e.i)).sort((a,b)=>RANK[byId[a.i].p]-RANK[byId[b.i].p]||(byId[a.i].g>byId[b.i].g?-1:1));s.best=Math.min(...s.ev.map(e=>RANK[byId[e.i].p]));s.mine=isMine(s);return s})
-    .sort((a,b)=>(b.mine-a.mine)||(a.best-b.best)||(b.ev.length-a.ev.length));
+   const list=slots[t].map(s=>{const seen=new Set();s.ev=s.ev.filter(e=>!seen.has(e.i)&&seen.add(e.i)).sort((a,b)=>RANK[byId[a.i].p]-RANK[byId[b.i].p]||(byId[a.i].g>byId[b.i].g?-1:1));s.best=s.ev.length?Math.min(...s.ev.map(e=>RANK[byId[e.i].p])):9;s.mine=isMine(s);s.ag=isSched(s);return s})
+    .sort((a,b)=>(b.mine-a.mine)||(b.ag-a.ag)||(a.best-b.best)||(b.ev.length-a.ev.length));
    h+=`<div class="slot"><div class="hr">${t.replace(' - ','<br>')}</div><div class="cards">`+list.map(s=>{
     const nr=s.ev.filter(e=>byId[e.i].g==='r').length,np=s.ev.length-nr;
-    return `<article class="card${s.best===0?' hasA':''}${s.mine?' isMine':''}"><div class="meta"><span class="room">${esc(s.rm.replace(/ - .*?Bloco /,' · Bloco '))}</span><span>${s.mine?'<span class="tag mineTag">SUA SESSÃO</span> ':''}<span class="tag">${esc(DIV[s.dv]||s.dv)}</span></span></div><h3>${esc(s.s)}</h3><div class="people">${s.ev.map(e=>pill(byId[e.i],e)).join('')}</div></article>`}).join('')+`</div></div>`;
+    return `<article class="card${s.best===0?' hasA':''}${s.mine?' isMine':''}${s.ag?' isSched':''}"><div class="meta"><span class="room">${esc(s.rm.replace(/ - .*?Bloco /,' · Bloco '))}</span><span>${s.mine?'<span class="tag mineTag">SUA SESSÃO</span> ':''}${s.ag&&!s.mine?'<span class="tag agTag">★ NA MINHA AGENDA</span> ':''}<span class="tag">${esc(DIV[s.dv]||s.dv)}</span></span></div><h3>${esc(s.s)}</h3>${s.ev.length?`<div class="people">${s.ev.map(e=>pill(byId[e.i],e)).join('')}</div>`:'<p class="nobody">Nenhum contato mapeado nesta sessão.</p>'}</article>`}).join('')+`</div></div>`;
   });
  });
  out.innerHTML=h;
@@ -229,7 +228,7 @@ function openP(i){const p=byId[i];
   (p.li?`<div class="kv"><b>Vínculo no LinkedIn</b>${esc(p.li)}</div>`:'')+
   ((p.ins||[]).length?`<div class="kv"><b>Instituições</b>${p.ins.map(esc).join(' · ')}</div>`:'')+`<div class="kv"><b>Perfil</b>${p.u?`<a href="${esc(p.u)}" target="_blank" rel="noopener">Abrir no LinkedIn</a>`:`<a href="https://www.google.com/search?q=${encodeURIComponent('site:linkedin.com/in "'+p.n+'" '+p.af)}" target="_blank" rel="noopener">Buscar perfil</a> (não confirmado)`}</div>`+
   `<div class="kv"><b>Ação sugerida</b>${act}</div>`+
-  `<div class="kv"><b>Onde estará (${evs.length})</b></div>`+evs.map(e=>`<div class="ap${isMine(e)?' m':''}"><div class="t">${e.d.slice(0,5)} · ${e.t} · ${esc(e.rm)}</div><div><strong>${esc(e.s)}</strong> <span style="color:var(--ink2)">(${esc(e.ro)})</span></div>${e.w?`<div style="color:var(--ink2)">${esc(e.w)}</div>`:''}</div>`).join('')+
+  `<div class="kv"><b>Onde estará (${evs.length})</b></div>`+evs.map(e=>`<div class="ap${isMine(e)||isSched(e)?' m':''}"><div class="t">${e.d.slice(0,5)} · ${e.t} · ${esc(e.rm)}${isSched(e)&&!isMine(e)?' · ★ na sua agenda':''}</div><div><strong>${esc(e.s)}</strong> <span style="color:var(--ink2)">(${esc(e.ro)})</span></div>${e.w?`<div style="color:var(--ink2)">${esc(e.w)}</div>`:''}</div>`).join('')+
   `<label style="display:flex;gap:8px;align-items:center;font-size:13px"><input class="chk" type="checkbox" id="dc${p.i}" ${done[p.i]?'checked':''}> Já abordei</label>`;
  document.getElementById('dc'+p.i).onchange=ev=>{if(ev.target.checked)done[p.i]=true;else delete done[p.i];saveDone();render()};
  dlg.showModal();

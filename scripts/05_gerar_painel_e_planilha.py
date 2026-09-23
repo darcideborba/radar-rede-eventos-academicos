@@ -3,6 +3,7 @@
 Entradas: dados/agenda.json, dados/cruzamento.json, dados/potenciais.json, config
 Saídas  : saida/painel.html   (arquivo único; abre em qualquer navegador)
           saida/rede_evento.xlsx (abas: Resumo, 1 - Rede na agenda, 1b - A verificar, 2 - Potenciais contatos)
+Opcional: config/minha_agenda.ics ou .csv marca no painel as sessões que o pesquisador vai assistir.
 
 Prioridade das pessoas da REDE:
   A = na mesma sessão do pesquisador, ou Confirmado em papel de destaque;
@@ -26,6 +27,66 @@ SAIDA = os.path.join(RAIZ, "saida")
 def evento(r, pid):
     return dict(i=pid, d=r["data"], t=r["hora"], rm=r["sala"], s=r["sessao"] or "", dv=r["divisao"],
                 ro=r["papel"], w=(r["titulo"] or "")[:160], c=r["codigo"] or "")
+
+
+def ler_agenda_pessoal(cfg, agenda):
+    """Sessões que o pesquisador marcou para assistir (opcional).
+
+    Aceita config/minha_agenda.ics (exportado do Google Agenda, Outlook etc.) ou
+    config/minha_agenda.csv com colunas data;hora;sala (ex.: 24/09/2026;10:45;Sala B44 - 2º Andar - Bloco B).
+    Cada evento é associado à sessão da programação com mesma data, horário de início e sala;
+    eventos sem correspondência (ex.: cerimônias fora da programação) só entram se o título casar com
+    evento.filtro_agenda_pessoal (expressão regular, ex.: "ANPAD"); os demais compromissos são ignorados.
+    """
+    import csv
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    fuso = ZoneInfo(cfg["evento"].get("fuso_horario", "America/Sao_Paulo"))
+    datas = {r["data"] for r in agenda}
+    filtro = cfg["evento"].get("filtro_agenda_pessoal", "")
+    brutos = []
+    ics = os.path.join(RAIZ, "config", "minha_agenda.ics")
+    csvp = os.path.join(RAIZ, "config", "minha_agenda.csv")
+    if os.path.exists(ics):
+        texto = re.sub(r"\r?\n[ \t]", "", open(ics, encoding="utf-8").read())
+        for bloco in texto.split("BEGIN:VEVENT")[1:]:
+            campos = {}
+            for linha in bloco.splitlines():
+                if ":" in linha:
+                    k, v = linha.split(":", 1)
+                    campos[k.split(";")[0]] = v.strip()
+
+            def hora(v):
+                if not v or "T" not in v:
+                    return None
+                dt = datetime.strptime(v.rstrip("Z")[:15], "%Y%m%dT%H%M%S")
+                if v.endswith("Z"):
+                    dt = dt.replace(tzinfo=ZoneInfo("UTC")).astimezone(fuso)
+                return dt
+            ini, fim = hora(campos.get("DTSTART")), hora(campos.get("DTEND"))
+            if ini:
+                brutos.append(dict(d=ini.strftime("%d/%m/%Y"), h=ini.strftime("%H:%M"),
+                                   hf=fim.strftime("%H:%M") if fim else "",
+                                   rm=campos.get("LOCATION", "").replace("\\,", ",").strip(),
+                                   titulo=campos.get("SUMMARY", "").replace("\\,", ",")))
+    elif os.path.exists(csvp):
+        with open(csvp, encoding="utf-8") as f:
+            for l in csv.DictReader(f, delimiter=";"):
+                brutos.append(dict(d=l["data"].strip(), h=l["hora"].strip()[:5], hf="", rm=l["sala"].strip(), titulo=l.get("titulo", "")))
+    saida = []
+    for b in brutos:
+        if b["d"] not in datas:
+            continue  # evento fora dos dias do congresso
+        m = [r for r in agenda if r["data"] == b["d"] and (r["hora"] or "").startswith(b["h"])
+             and b["rm"] and r["sala"] == b["rm"]]
+        if m:
+            saida.append(dict(d=m[0]["data"], t=m[0]["hora"], rm=m[0]["sala"], s=m[0]["sessao"] or "", dv=m[0]["divisao"]))
+        elif filtro and re.search(filtro, b["titulo"], re.I):
+            saida.append(dict(d=b["d"], t=f'{b["h"]} - {b["hf"]}' if b["hf"] else b["h"], rm=b["rm"], s=b["titulo"], dv=""))
+    unicos = {(x["d"], x["t"], x["rm"]): x for x in saida}
+    if unicos:
+        print(f"[ok] agenda pessoal: {len(unicos)} sessões marcadas")
+    return list(unicos.values())
 
 
 def montar_dados(cfg):
@@ -81,7 +142,8 @@ def montar_dados(cfg):
         minhas_sessoes.append(dict(d=r["data"], t=r["hora"], rm=r["sala"], s=r["sessao"], dv=r["divisao"], papeis=papeis))
     ev = cfg["evento"]
     meta = dict(evento=ev["nome"], local=ev["local"], periodo=ev["periodo"], dias=ev["rotulos_dias"],
-                divisoes=ev["divisoes"], minhas=minhas_sessoes)
+                divisoes=ev["divisoes"], minhas=minhas_sessoes,
+                agendadas=ler_agenda_pessoal(cfg, agenda))
     return dict(meta=meta, P=P, E=E), agenda, cruz, pot
 
 

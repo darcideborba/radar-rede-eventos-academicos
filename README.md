@@ -36,16 +36,17 @@ O projeto é genérico: serve para qualquer pesquisador e para qualquer evento c
 2. **Extraia a agenda:** `python3 scripts/01_extrair_agenda.py`
 3. **Exporte a sua rede:** abra a página de seguidores do LinkedIn, cole `scripts/02_exportar_rede_linkedin.js` no console do navegador (F12) e mova o `rede_linkedin.json` baixado para `dados/`. Essa etapa é opcional: sem ela, o painel mostra só os potenciais contatos.
 4. **Execute o restante:** `./executar_tudo.sh`, ou os scripts 03 a 05 em sequência.
-5. **Revise:**
+5. **(Opcional) Marque as sessões que vai assistir:** exporte sua agenda (Google Agenda: Configurações > Importar e exportar) e salve como `config/minha_agenda.ics`, ou preencha `config/minha_agenda.csv` no formato de `minha_agenda.exemplo.csv` (data;hora;sala). Cada evento é associado à sessão com mesma data, horário de início e sala.
+6. **Revise:**
    - Confira na planilha os casos "Provável" e "A verificar".
    - Registre as decisões em `config/revisao_manual.csv` (modelo em `revisao_manual.exemplo.csv`).
    - Se quiser, informe perfis localizados em `config/perfis_localizados.json`.
    - Rode de novo as etapas 3 a 5.
-6. **Abra** `saida/painel.html` no navegador.
+7. **Abra** `saida/painel.html` no navegador.
 
 ## O painel
 
-- **Por horário:** dia, faixa de horário e cartões de sessão. As pessoas aparecem como pílulas com nome (sobrenomes do meio abreviados) e sigla da instituição: cheias para a rede, tracejadas para os potenciais, com a letra da prioridade. Sessões com alguém de prioridade A ganham uma faixa lateral, e as suas sessões ficam destacadas.
+- **Por horário:** dia, faixa de horário e cartões de sessão. As pessoas aparecem como pílulas com nome (sobrenomes do meio abreviados) e sigla da instituição: cheias para a rede, tracejadas para os potenciais, com a letra da prioridade. Sessões com alguém de prioridade A ganham uma faixa lateral; as suas sessões ficam destacadas com o selo "SUA SESSÃO", e as da sua agenda pessoal, com o selo "★ NA MINHA AGENDA" e o botão "Minha agenda" para ver só elas.
 - **Por pessoa:** lista ordenada por prioridade, com a próxima aparição e a marcação "já abordei", salva no navegador.
 - **Filtros:** dia, grupo, prioridade, instituição (lista suspensa com todas as instituições) e busca. Ao clicar em um nome, abre uma ficha com o perfil, a ação sugerida e todas as aparições.
 

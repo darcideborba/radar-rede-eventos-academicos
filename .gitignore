@@ -6,3 +6,5 @@ config/revisao_manual.csv
 config/perfis_localizados.json
 __pycache__/
 *.pyc
+config/minha_agenda.ics
+config/minha_agenda.csv
