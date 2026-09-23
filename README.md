@@ -45,7 +45,7 @@ O projeto é genérico: serve para qualquer pesquisador e para qualquer evento c
 
 ## O painel
 
-- **Por horário:** dia, faixa de horário e cartões de sessão. As pessoas aparecem como pílulas: cheias para a rede, tracejadas para os potenciais, com a letra da prioridade. Sessões com alguém de prioridade A ganham uma faixa lateral, e as suas sessões ficam destacadas.
+- **Por horário:** dia, faixa de horário e cartões de sessão. As pessoas aparecem como pílulas com nome (sobrenomes do meio abreviados) e sigla da instituição: cheias para a rede, tracejadas para os potenciais, com a letra da prioridade. Sessões com alguém de prioridade A ganham uma faixa lateral, e as suas sessões ficam destacadas.
 - **Por pessoa:** lista ordenada por prioridade, com a próxima aparição e a marcação "já abordei", salva no navegador.
 - **Filtros:** dia, grupo, prioridade, instituição (lista suspensa com todas as instituições) e busca. Ao clicar em um nome, abre uma ficha com o perfil, a ação sugerida e todas as aparições.
 

@@ -58,13 +58,15 @@ def montar_dados(cfg):
                 else "Na sua sessão" if mesma else "Papel de destaque" if papeis & DESTAQUE else "")
         P.append(dict(i=pid, n=c["nome_linkedin"], g="r", p=pr, st=c["status"], li=" · ".join(c["vinculos"]),
                       h=c["titulo"][:140], u=c["url"], af=instituicao_curta(itens[0]["afiliacao"]), note=nota,
-                      ins=instituicoes([r["afiliacao"] for r in itens], aliases)))
+                      ins=instituicoes([r["afiliacao"] for r in itens], aliases),
+                      sg=(instituicoes([itens[0]["afiliacao"].split(") - (")[0]], aliases) or [""])[0]))
         E += [evento(r, pid) for r in itens]
         pid += 1
     for x in pot:
         P.append(dict(i=pid, n=x["nome"], g="p", p=x["prioridade"], st="", li="", h="", u=x.get("url", ""),
                       af=instituicao_curta(x["afiliacao"]), note="Na sua sessão" if x["mesma_sessao"] else "",
-                      temas=x["temas"], ins=instituicoes([r["afiliacao"] for r in x["itens"]], aliases)))
+                      temas=x["temas"], ins=instituicoes([r["afiliacao"] for r in x["itens"]], aliases),
+                      sg=(instituicoes([x["afiliacao"].split(" | ")[0].split(") - (")[0]], aliases) or [""])[0]))
         E += [evento(r, pid) for r in x["itens"]]
         pid += 1
     E = [e for e in E if e["d"]]

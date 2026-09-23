@@ -72,6 +72,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 9px 4px 5px;font-size:12.5px;line-height:1.2;cursor:pointer;border:1px solid transparent;background:var(--surface2);color:var(--ink);text-align:left}
 .pill.r{background:var(--redeSoft);border-color:color-mix(in srgb,var(--rede) 30%,transparent)}
 .pill.p{background:var(--potSoft);border-color:color-mix(in srgb,var(--pot) 30%,transparent);border-style:dashed}
+.aff{font:600 10.5px/1 "JetBrains Mono",monospace;color:var(--accent);background:var(--surface);border:1px solid var(--line);padding:2px 4px;border-radius:4px}
 .pill small{color:var(--ink2);font-size:11px}
 .pill.done{opacity:.5;text-decoration:line-through}
 .empty{padding:40px 0;text-align:center;color:var(--ink2)}
@@ -146,6 +147,9 @@ let done={};try{done=JSON.parse(localStorage.getItem(LS+'-done')||'{}')}catch(e)
 function saveDone(){try{localStorage.setItem(LS+'-done',JSON.stringify(done))}catch(e){}}
 try{const v=JSON.parse(localStorage.getItem(LS+'-ui')||'null');if(v){S={...S,...v,q:''}}}catch(e){}
 function saveUI(){try{localStorage.setItem(LS+'-ui',JSON.stringify({view:S.view,day:S.day,g:S.g,pr:S.pr}))}catch(e){}}
+const PART=new Set(['de','da','do','dos','das','e','di','del','van','von','y']);
+function shortName(n){const w=(n||'').trim().split(/\s+/);if(w.length<=3)return n;const f=w[0],l=w[w.length-1];const mid=w.slice(1,-1).filter(x=>!PART.has(x.toLowerCase())).map(x=>x[0].toUpperCase()+'.');return [f,...mid,l].join(' ')}
+function sigla(p){const s=p.sg||(p.ins||[])[0]||'';return s.length>14?s.slice(0,13)+'…':s}
 const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const norm=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 const isMine=e=>MINES.some(m=>m.d===e.d&&m.t===e.t&&m.rm===e.rm);
@@ -180,7 +184,7 @@ if(MINES.length){const m0=MINES[0];const ids=new Set(E.filter(e=>isMine(e)).map(
  document.getElementById('mineText').textContent='Seu papel: '+[...new Set(MINES.flatMap(m=>m.papeis))].join(', ')+'. Pessoas da sua rede nessas sessões: '+nr+'; potenciais contatos: '+np+'.';}
 document.getElementById('goMine').onclick=()=>{if(!MINES.length)return;S.view='agenda';S.day=MINES[0].d;S.g='all';S.pr={A:true,B:true,C:true};S.q='';S.inst='';document.getElementById('q').value='';document.getElementById('inst').value='';go();setTimeout(()=>{const el=document.querySelector('.card.isMine');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},30)};
 function go(){saveUI();syncControls();render()}
-function pill(p,e){return `<button type="button" class="pill ${p.g}${done[p.i]?' done':''}" data-i="${p.i}" title="${esc(p.af)}"><i class="pr ${p.p}">${p.p}</i>${esc(p.n)}${e.ro!=='Autor'?` <small>${esc(e.ro)}</small>`:''}</button>`}
+function pill(p,e){return `<button type="button" class="pill ${p.g}${done[p.i]?' done':''}" data-i="${p.i}" title="${esc(p.n+' · '+(p.ins||[]).join(', '))}"><i class="pr ${p.p}">${p.p}</i>${esc(shortName(p.n))}${sigla(p)?` <span class="aff">${esc(sigla(p))}</span>`:''}${e.ro!=='Autor'?` <small>${esc(e.ro)}</small>`:''}</button>`}
 function render(){
  const out=document.getElementById('out');
  if(S.view==='people')return renderPeople(out);
@@ -207,7 +211,7 @@ function renderPeople(out){
   .sort((a,b)=>RANK[a.p]-RANK[b.p]||(a.g>b.g?-1:1)||a.n.localeCompare(b.n,'pt'));
  if(!ps.length){out.innerHTML='<div class="empty">Ninguém com esses filtros.</div>';return}
  out.innerHTML=`<div class="plist">`+ps.map(p=>{const evs=p.ev.filter(e=>S.day==='all'||e.d===S.day).sort((a,b)=>dkey(a).localeCompare(dkey(b)));const e=evs[0];
-  return `<div class="prow" data-i="${p.i}" role="button" tabindex="0"><i class="pr ${p.p}">${p.p}</i><div><div class="nm"><i class="dot ${p.g}" style="display:inline-block;margin-right:6px"></i>${esc(p.n)}</div><div class="sub">${esc(p.af)}${p.note?' · <b>'+esc(p.note)+'</b>':''}</div></div><div class="c3 sub">${esc(e.s)}</div><div class="nx">${e.d.slice(0,5)} ${e.t.slice(0,5)}<br>${esc(e.rm.split(' - ')[0])}${evs.length>1?` +${evs.length-1}`:''}</div><input class="chk" type="checkbox" id="c${p.i}" data-c="${p.i}" aria-label="Abordado" title="Marcar como abordado" ${done[p.i]?'checked':''}></div>`}).join('')+`</div>`;
+  return `<div class="prow" data-i="${p.i}" role="button" tabindex="0"><i class="pr ${p.p}">${p.p}</i><div><div class="nm"><i class="dot ${p.g}" style="display:inline-block;margin-right:6px"></i>${esc(p.n)}${sigla(p)?` <span class="aff">${esc(sigla(p))}</span>`:''}</div><div class="sub">${esc(p.af)}${p.note?' · <b>'+esc(p.note)+'</b>':''}</div></div><div class="c3 sub">${esc(e.s)}</div><div class="nx">${e.d.slice(0,5)} ${e.t.slice(0,5)}<br>${esc(e.rm.split(' - ')[0])}${evs.length>1?` +${evs.length-1}`:''}</div><input class="chk" type="checkbox" id="c${p.i}" data-c="${p.i}" aria-label="Abordado" title="Marcar como abordado" ${done[p.i]?'checked':''}></div>`}).join('')+`</div>`;
 }
 document.getElementById('out').addEventListener('click',ev=>{
  const c=ev.target.closest('[data-c]');if(c){done[c.dataset.c]=c.checked;if(!c.checked)delete done[c.dataset.c];saveDone();return}
