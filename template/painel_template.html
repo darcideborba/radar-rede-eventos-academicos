@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>__TITULO__</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+:root{
+ --bg:#F4F7F7;--surface:#FFFFFF;--surface2:#EAF0F0;--ink:#12242A;--ink2:#4A5E64;--line:#D5DFE0;
+ --accent:#0B6E75;--accentSoft:#D7EDEE;
+ --rede:#2B59A8;--redeSoft:#E1E9F7;--pot:#8A5A12;--potSoft:#F6EBD7;
+ --pA:#C23B1E;--pAsoft:#FBE3DC;--pB:#B7791F;--pBsoft:#FBEFD5;--pC:#687B82;--pCsoft:#E7ECEE;
+ --mine:#0B6E75;--shadow:0 1px 2px rgba(18,36,42,.06),0 4px 14px rgba(18,36,42,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+ --bg:#0F1A1D;--surface:#16252A;--surface2:#1C2F35;--ink:#E5EEEF;--ink2:#9DB1B6;--line:#2A4047;
+ --accent:#4DB6BD;--accentSoft:#153A3E;--rede:#8AAEF0;--redeSoft:#1D2E4D;--pot:#E3B46A;--potSoft:#3A2C14;
+ --pA:#FF8466;--pAsoft:#4A2219;--pB:#EDB95A;--pBsoft:#43341A;--pC:#9DB0B6;--pCsoft:#253A40;--mine:#4DB6BD;--shadow:none}}
+:root[data-theme="dark"]{color-scheme:dark;
+ --bg:#0F1A1D;--surface:#16252A;--surface2:#1C2F35;--ink:#E5EEEF;--ink2:#9DB1B6;--line:#2A4047;
+ --accent:#4DB6BD;--accentSoft:#153A3E;--rede:#8AAEF0;--redeSoft:#1D2E4D;--pot:#E3B46A;--potSoft:#3A2C14;
+ --pA:#FF8466;--pAsoft:#4A2219;--pB:#EDB95A;--pBsoft:#43341A;--pC:#9DB0B6;--pCsoft:#253A40;--mine:#4DB6BD;--shadow:none}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 "Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:20px 60px}
+h1{font-family:"Bricolage Grotesque","Instrument Sans",sans-serif;font-size:clamp(26px,4vw,38px);line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.01em}
+.eyebrow{font:500 12px/1 "JetBrains Mono",ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.lede{color:var(--ink2);max-width:68ch;margin:8px 0 0}
+.top{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:end;margin-bottom:18px}
+@media(max-width:820px){.top{grid-template-columns:1fr}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.stat b{display:block;font:700 24px/1.1 "Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--ink2)}
+.mine{display:flex;gap:14px;align-items:flex-start;background:var(--accentSoft);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:12px;padding:14px 16px;margin:6px 0 18px}
+.mine .when{font:500 13px/1.3 "JetBrains Mono",monospace;color:var(--accent);white-space:nowrap}
+.mine p{margin:2px 0 0;color:var(--ink2);font-size:14px}
+.mine button{margin-left:auto}
+.controls{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;border-bottom:1px solid var(--line);margin-bottom:14px}
+.seg{display:inline-flex;background:var(--surface2);border-radius:9px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;color:var(--ink2);font:600 13px/1 "Instrument Sans",sans-serif;padding:8px 11px;border-radius:7px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 12px/1 "Instrument Sans",sans-serif;padding:7px 10px;border-radius:999px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.chip[aria-pressed="false"]{opacity:.45}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.inst{flex:0 1 240px}
+.search{flex:1 1 200px;min-width:0;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;padding:9px 12px;font:14px "Instrument Sans",sans-serif}
+.btn{border:1px solid var(--accent);background:var(--surface);color:var(--accent);font:600 13px/1 "Instrument Sans",sans-serif;padding:8px 12px;border-radius:8px;cursor:pointer}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--ink2);margin:0 0 16px}
+.legend i{display:inline-block;vertical-align:-2px;margin-right:5px}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.r{background:var(--rede)}.dot.p{border:2px solid var(--pot);background:transparent}
+.pr{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:5px;font:700 11px/1 "JetBrains Mono",monospace}
+.pr.A{background:var(--pA);color:#fff}.pr.B{background:var(--pBsoft);color:var(--pB);border:1px solid var(--pB)}.pr.C{background:var(--pCsoft);color:var(--pC)}
+.day{margin:22px 0 8px;display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:6px}
+.day h2{font:700 20px/1.2 "Bricolage Grotesque",sans-serif;margin:0}
+.day span{color:var(--ink2);font-size:13px}
+.slot{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+@media(max-width:620px){.slot{grid-template-columns:1fr}}
+.slot .hr{font:500 13px/1.3 "JetBrains Mono",monospace;color:var(--ink2);padding-top:6px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+@media(max-width:400px){.cards{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 12px 12px;position:relative;overflow:hidden}
+.card.hasA{border-left:4px solid var(--pA)}
+.card.isMine{border:2px solid var(--mine);background:var(--accentSoft)}
+.card .meta{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:var(--ink2);margin-bottom:3px}
+.card .room{font-weight:600;color:var(--ink)}
+.card h3{font-size:14px;line-height:1.3;margin:0 0 9px;font-weight:600;text-wrap:balance}
+.tag{font:600 10.5px/1 "JetBrains Mono",monospace;padding:3px 6px;border-radius:4px;background:var(--surface2);color:var(--ink2);white-space:nowrap}
+.tag.mineTag{background:var(--mine);color:var(--surface)}
+.people{display:flex;flex-wrap:wrap;gap:5px}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 9px 4px 5px;font-size:12.5px;line-height:1.2;cursor:pointer;border:1px solid transparent;background:var(--surface2);color:var(--ink);text-align:left}
+.pill.r{background:var(--redeSoft);border-color:color-mix(in srgb,var(--rede) 30%,transparent)}
+.pill.p{background:var(--potSoft);border-color:color-mix(in srgb,var(--pot) 30%,transparent);border-style:dashed}
+.pill small{color:var(--ink2);font-size:11px}
+.pill.done{opacity:.5;text-decoration:line-through}
+.empty{padding:40px 0;text-align:center;color:var(--ink2)}
+/* people view */
+.plist{display:grid;gap:6px}
+.prow{display:grid;grid-template-columns:28px 1fr 1.1fr 150px 34px;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:9px 12px;cursor:pointer}
+.prow .nm{font-weight:600}.prow .sub{font-size:12px;color:var(--ink2)}
+.prow .nx{font:500 12px/1.35 "JetBrains Mono",monospace;color:var(--ink2)}
+@media(max-width:720px){.prow{grid-template-columns:28px 1fr 34px}.prow .c3,.prow .nx{display:none}}
+.chk{width:20px;height:20px;accent-color:var(--accent);cursor:pointer}
+/* drawer */
+dialog{border:0;border-radius:14px;padding:0;width:min(560px,calc(100vw - 32px));background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(10,20,24,.45)}
+.dh{padding:18px 20px 12px;border-bottom:1px solid var(--line)}
+.dh h3{font:700 21px/1.2 "Bricolage Grotesque",sans-serif;margin:6px 0 4px}
+.db{padding:14px 20px 20px;display:grid;gap:12px;max-height:65vh;overflow:auto}
+.kv{font-size:13px}.kv b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink2);margin-bottom:2px}
+.ap{border-left:3px solid var(--line);padding-left:10px;font-size:13px}
+.ap.m{border-color:var(--mine)}
+.ap .t{font:500 12px "JetBrains Mono",monospace;color:var(--ink2)}
+.x{float:right;border:0;background:transparent;color:var(--ink2);font-size:22px;cursor:pointer;line-height:1}
+.note{display:inline-block;background:var(--pAsoft);color:var(--pA);font-weight:600;font-size:12px;padding:3px 8px;border-radius:6px}
+a{color:var(--accent)}
+.foot{margin-top:28px;font-size:12px;color:var(--ink2);max-width:80ch}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head><body>
+<div class="wrap">
+ <div class="top">
+  <div>
+   <div class="eyebrow" id="eyebrow"></div>
+   <h1>Onde encontrar sua rede e quem vale conhecer</h1>
+   <p class="lede">Cada sessão lista quem já está na sua rede LinkedIn (pontos cheios) e quem vale abordar (contorno tracejado). A letra indica a prioridade. Clique em um nome para ver o perfil e todas as aparições.</p>
+  </div>
+  <div class="stats" id="stats"></div>
+ </div>
+ <div class="mine" id="mine" hidden>
+  <div class="when" id="mineWhen"></div>
+  <div><strong id="mineTitle"></strong><p id="mineText"></p></div>
+  <button class="btn" id="goMine" type="button">Ver sessão</button>
+ </div>
+ <div class="controls" role="toolbar" aria-label="Filtros">
+  <div class="seg" id="view" aria-label="Visão"><button type="button" data-v="agenda" aria-pressed="true">Por horário</button><button type="button" data-v="people" aria-pressed="false">Por pessoa</button></div>
+  <div class="seg" id="days" aria-label="Dia"></div>
+  <div class="seg" id="grp" aria-label="Grupo"><button type="button" data-g="all" aria-pressed="true">Todos</button><button type="button" data-g="r" aria-pressed="false">Minha rede</button><button type="button" data-g="p" aria-pressed="false">Potenciais</button></div>
+  <div style="display:flex;gap:6px" id="prios"></div>
+  <select class="search inst" id="inst" aria-label="Instituição"><option value="">Todas as instituições</option></select>
+  <input class="search" id="q" type="search" placeholder="Buscar nome, instituição ou sessão" aria-label="Buscar">
+ </div>
+ <div class="legend">
+  <span><i class="dot r"></i>Minha rede (conexão, seguidor ou seguido)</span>
+  <span><i class="dot p"></i>Potencial contato</span>
+  <span><i class="pr A">A</i>Prioridade alta: sua sessão, papel de destaque ou forte aderência</span>
+  <span><i class="pr B">B</i>Média</span>
+  <span><i class="pr C">C</i>Complementar</span>
+ </div>
+ <div id="out"></div>
+ <p class="foot">Fonte: programação oficial do evento cruzada com a rede LinkedIn do próprio pesquisador. Na rede: prioridade A = na sua sessão ou em papel de destaque (coordenação, debate, painel, palestra); B = demais confirmados; C = correspondência provável, a conferir. Homônimos incertos ficam de fora e constam na planilha. A marcação "abordado" fica salva apenas neste navegador.</p>
+</div>
+<dialog id="dlg" aria-labelledby="dlgName"><div class="dh"><button class="x" type="button" id="dlgX" aria-label="Fechar">×</button><div id="dlgTop"></div></div><div class="db" id="dlgBody"></div></dialog>
+<script>
+const DATA=__DATA__;
+const P=DATA.P,E=DATA.E,byId={};P.forEach(p=>{byId[p.i]=p;p.ev=[]});E.forEach(e=>byId[e.i].ev.push(e));
+const M=DATA.meta||{};const MINES=M.minhas||[];
+const DIV=M.divisoes||{};const DAYLONG=M.dias||{};
+const DAYS=[['all','Todos']].concat([...new Set(E.map(e=>e.d))].sort((a,b)=>(a.slice(6)+a.slice(3,5)+a.slice(0,2)).localeCompare(b.slice(6)+b.slice(3,5)+b.slice(0,2))).map(d=>{const l=(DAYLONG[d]||d).split(',')[0];return [d,l.slice(0,3)+' '+d.slice(0,2)]}));
+document.getElementById('eyebrow').textContent=[M.evento,M.local,M.periodo].filter(Boolean).join(' · ');
+const LS='radar-'+(M.evento||'evento').replace(/\W+/g,'-').toLowerCase();
+const RANK={A:0,B:1,C:2};
+let S={view:'agenda',day:'all',g:'all',pr:{A:true,B:true,C:true},q:'',inst:''};
+let done={};try{done=JSON.parse(localStorage.getItem(LS+'-done')||'{}')}catch(e){}
+function saveDone(){try{localStorage.setItem(LS+'-done',JSON.stringify(done))}catch(e){}}
+try{const v=JSON.parse(localStorage.getItem(LS+'-ui')||'null');if(v){S={...S,...v,q:''}}}catch(e){}
+function saveUI(){try{localStorage.setItem(LS+'-ui',JSON.stringify({view:S.view,day:S.day,g:S.g,pr:S.pr}))}catch(e){}}
+const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const norm=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const isMine=e=>MINES.some(m=>m.d===e.d&&m.t===e.t&&m.rm===e.rm);
+const dkey=e=>e.d.slice(6)+e.d.slice(3,5)+e.d.slice(0,2)+e.t;
+function pOk(p){return (S.g==='all'||p.g===S.g)&&S.pr[p.p]&&(!S.inst||(p.ins||[]).includes(S.inst))}
+function qOk(p,e){if(!S.q)return true;const q=norm(S.q);return norm(p.n+' '+p.af+' '+p.h).includes(q)||(e&&norm(e.s+' '+e.rm).includes(q))}
+// stats
+(function(){const r=P.filter(p=>p.g==='r'),pp=P.filter(p=>p.g==='p');
+ const a=P.filter(p=>p.p==='A').length;
+ document.getElementById('stats').innerHTML=`<div class="stat"><b>${r.length}</b><span>da sua rede no evento</span></div><div class="stat"><b>${pp.length}</b><span>potenciais contatos</span></div><div class="stat"><b>${a}</b><span>com prioridade A</span></div>`})();
+// controls
+document.getElementById('days').innerHTML=DAYS.map(([k,l])=>`<button type="button" data-d="${k}">${l}</button>`).join('');
+document.getElementById('prios').innerHTML=['A','B','C'].map(k=>`<button type="button" class="chip" data-p="${k}"><i class="pr ${k}">${k}</i>${k==='A'?'Alta':k==='B'?'Média':'Compl.'}</button>`).join('');
+function syncControls(){
+ document.querySelectorAll('#view button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===S.view));
+ document.querySelectorAll('#days button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.d===S.day));
+ document.querySelectorAll('#grp button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.g===S.g));
+ document.querySelectorAll('#prios button').forEach(b=>b.setAttribute('aria-pressed',S.pr[b.dataset.p]));
+}
+document.getElementById('view').onclick=e=>{const b=e.target.closest('button');if(b){S.view=b.dataset.v;go()}};
+document.getElementById('days').onclick=e=>{const b=e.target.closest('button');if(b){S.day=b.dataset.d;go()}};
+document.getElementById('grp').onclick=e=>{const b=e.target.closest('button');if(b){S.g=b.dataset.g;go()}};
+document.getElementById('prios').onclick=e=>{const b=e.target.closest('button');if(b){S.pr[b.dataset.p]=!S.pr[b.dataset.p];go()}};
+document.getElementById('q').oninput=e=>{S.q=e.target.value;render()};
+(function(){const c={};P.forEach(p=>(p.ins||[]).forEach(i=>c[i]=(c[i]||0)+1));
+ const sel=document.getElementById('inst');Object.keys(c).sort((a,b)=>a.localeCompare(b,'pt',{sensitivity:'base'})).forEach(i=>{const o=document.createElement('option');o.value=i;o.textContent=i+' ('+c[i]+')';sel.appendChild(o)});
+ sel.onchange=e=>{S.inst=e.target.value;render()};})();
+if(MINES.length){const m0=MINES[0];const ids=new Set(E.filter(e=>isMine(e)).map(e=>e.i));const nr=[...ids].filter(i=>byId[i].g==='r').length,np=ids.size-nr;
+ document.getElementById('mine').hidden=false;
+ document.getElementById('mineWhen').innerHTML=MINES.map(m=>esc(m.d.slice(0,5)+' · '+m.t.slice(0,5))+'<br>'+esc(m.rm.split(' - ')[0])).join('<br><br>');
+ document.getElementById('mineTitle').textContent=(MINES.length>1?'Suas sessões: ':'Sua sessão: ')+MINES.map(m=>m.s).join(' | ');
+ document.getElementById('mineText').textContent='Seu papel: '+[...new Set(MINES.flatMap(m=>m.papeis))].join(', ')+'. Pessoas da sua rede nessas sessões: '+nr+'; potenciais contatos: '+np+'.';}
+document.getElementById('goMine').onclick=()=>{if(!MINES.length)return;S.view='agenda';S.day=MINES[0].d;S.g='all';S.pr={A:true,B:true,C:true};S.q='';S.inst='';document.getElementById('q').value='';document.getElementById('inst').value='';go();setTimeout(()=>{const el=document.querySelector('.card.isMine');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},30)};
+function go(){saveUI();syncControls();render()}
+function pill(p,e){return `<button type="button" class="pill ${p.g}${done[p.i]?' done':''}" data-i="${p.i}" title="${esc(p.af)}"><i class="pr ${p.p}">${p.p}</i>${esc(p.n)}${e.ro!=='Autor'?` <small>${esc(e.ro)}</small>`:''}</button>`}
+function render(){
+ const out=document.getElementById('out');
+ if(S.view==='people')return renderPeople(out);
+ const ev=E.filter(e=>(S.day==='all'||e.d===S.day)&&pOk(byId[e.i])&&qOk(byId[e.i],e));
+ if(!ev.length){out.innerHTML='<div class="empty">Nenhuma sessão com esses filtros. Ajuste o dia, o grupo ou a prioridade.</div>';return}
+ const sess={};ev.forEach(e=>{const k=e.d+'|'+e.t+'|'+e.rm+'|'+e.s;(sess[k]=sess[k]||{d:e.d,t:e.t,rm:e.rm,s:e.s,dv:e.dv,ev:[]}).ev.push(e)});
+ const byDay={};Object.values(sess).forEach(s=>{(byDay[s.d]=byDay[s.d]||{});(byDay[s.d][s.t]=byDay[s.d][s.t]||[]).push(s)});
+ let h='';
+ Object.keys(byDay).sort((a,b)=>dkey({d:a,t:''}).localeCompare(dkey({d:b,t:''}))).forEach(d=>{
+  const slots=byDay[d];const n=new Set(Object.values(slots).flat().flatMap(s=>s.ev.map(e=>e.i))).size;
+  h+=`<div class="day"><h2>${DAYLONG[d]||d}</h2><span>${n} pessoa${n>1?'s':''}</span></div>`;
+  Object.keys(slots).sort().forEach(t=>{
+   const list=slots[t].map(s=>{const seen=new Set();s.ev=s.ev.filter(e=>!seen.has(e.i)&&seen.add(e.i)).sort((a,b)=>RANK[byId[a.i].p]-RANK[byId[b.i].p]||(byId[a.i].g>byId[b.i].g?-1:1));s.best=Math.min(...s.ev.map(e=>RANK[byId[e.i].p]));s.mine=isMine(s);return s})
+    .sort((a,b)=>(b.mine-a.mine)||(a.best-b.best)||(b.ev.length-a.ev.length));
+   h+=`<div class="slot"><div class="hr">${t.replace(' - ','<br>')}</div><div class="cards">`+list.map(s=>{
+    const nr=s.ev.filter(e=>byId[e.i].g==='r').length,np=s.ev.length-nr;
+    return `<article class="card${s.best===0?' hasA':''}${s.mine?' isMine':''}"><div class="meta"><span class="room">${esc(s.rm.replace(/ - .*?Bloco /,' · Bloco '))}</span><span>${s.mine?'<span class="tag mineTag">SUA SESSÃO</span> ':''}<span class="tag">${esc(DIV[s.dv]||s.dv)}</span></span></div><h3>${esc(s.s)}</h3><div class="people">${s.ev.map(e=>pill(byId[e.i],e)).join('')}</div></article>`}).join('')+`</div></div>`;
+  });
+ });
+ out.innerHTML=h;
+}
+function renderPeople(out){
+ const ps=P.filter(p=>pOk(p)&&qOk(p)&&p.ev.some(e=>S.day==='all'||e.d===S.day))
+  .sort((a,b)=>RANK[a.p]-RANK[b.p]||(a.g>b.g?-1:1)||a.n.localeCompare(b.n,'pt'));
+ if(!ps.length){out.innerHTML='<div class="empty">Ninguém com esses filtros.</div>';return}
+ out.innerHTML=`<div class="plist">`+ps.map(p=>{const evs=p.ev.filter(e=>S.day==='all'||e.d===S.day).sort((a,b)=>dkey(a).localeCompare(dkey(b)));const e=evs[0];
+  return `<div class="prow" data-i="${p.i}" role="button" tabindex="0"><i class="pr ${p.p}">${p.p}</i><div><div class="nm"><i class="dot ${p.g}" style="display:inline-block;margin-right:6px"></i>${esc(p.n)}</div><div class="sub">${esc(p.af)}${p.note?' · <b>'+esc(p.note)+'</b>':''}</div></div><div class="c3 sub">${esc(e.s)}</div><div class="nx">${e.d.slice(0,5)} ${e.t.slice(0,5)}<br>${esc(e.rm.split(' - ')[0])}${evs.length>1?` +${evs.length-1}`:''}</div><input class="chk" type="checkbox" id="c${p.i}" data-c="${p.i}" aria-label="Abordado" title="Marcar como abordado" ${done[p.i]?'checked':''}></div>`}).join('')+`</div>`;
+}
+document.getElementById('out').addEventListener('click',ev=>{
+ const c=ev.target.closest('[data-c]');if(c){done[c.dataset.c]=c.checked;if(!c.checked)delete done[c.dataset.c];saveDone();return}
+ const t=ev.target.closest('[data-i]');if(t)openP(+t.dataset.i)});
+document.getElementById('out').addEventListener('keydown',ev=>{if(ev.key==='Enter'){const t=ev.target.closest('.prow');if(t)openP(+t.dataset.i)}});
+const dlg=document.getElementById('dlg');document.getElementById('dlgX').onclick=()=>dlg.close();
+dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
+function openP(i){const p=byId[i];
+ const grp=p.g==='r'?`<span class="tag" style="background:var(--redeSoft);color:var(--rede)">MINHA REDE${p.st==='Provável'?' · PROVÁVEL':''}</span>`:`<span class="tag" style="background:var(--potSoft);color:var(--pot)">POTENCIAL CONTATO</span>`;
+ document.getElementById('dlgTop').innerHTML=`<div style="display:flex;gap:6px;align-items:center"><i class="pr ${p.p}">${p.p}</i>${grp}</div><h3 id="dlgName">${esc(p.n)}</h3><div style="color:var(--ink2);font-size:13px">${esc(p.af)}</div>${p.note?`<div style="margin-top:8px"><span class="note">${esc(p.note)}</span></div>`:''}`;
+ const act=p.g==='r'?(p.p==='A'?'Cumprimentar na sessão e registrar a interação; comentar ou compartilhar publicação sobre o evento.':'Cumprimentar se houver oportunidade; interagir com publicações sobre o EnANPAD.'):(p.p==='A'?'Assistir à sessão e abordar ao final; depois, convite com nota curta citando a sessão e o tema em comum.':'Seguir o perfil; conectar após interação no evento ou em publicação.');
+ const evs=[...p.ev].sort((a,b)=>dkey(a).localeCompare(dkey(b)));
+ document.getElementById('dlgBody').innerHTML=
+  (p.h?`<div class="kv"><b>${p.g==='r'?'Título no LinkedIn':'Título (busca)'}</b>${esc(p.h)}</div>`:'')+
+  (p.li?`<div class="kv"><b>Vínculo no LinkedIn</b>${esc(p.li)}</div>`:'')+
+  ((p.ins||[]).length?`<div class="kv"><b>Instituições</b>${p.ins.map(esc).join(' · ')}</div>`:'')+`<div class="kv"><b>Perfil</b>${p.u?`<a href="${esc(p.u)}" target="_blank" rel="noopener">Abrir no LinkedIn</a>`:`<a href="https://www.google.com/search?q=${encodeURIComponent('site:linkedin.com/in "'+p.n+'" '+p.af)}" target="_blank" rel="noopener">Buscar perfil</a> (não confirmado)`}</div>`+
+  `<div class="kv"><b>Ação sugerida</b>${act}</div>`+
+  `<div class="kv"><b>Onde estará (${evs.length})</b></div>`+evs.map(e=>`<div class="ap${isMine(e)?' m':''}"><div class="t">${e.d.slice(0,5)} · ${e.t} · ${esc(e.rm)}</div><div><strong>${esc(e.s)}</strong> <span style="color:var(--ink2)">(${esc(e.ro)})</span></div>${e.w?`<div style="color:var(--ink2)">${esc(e.w)}</div>`:''}</div>`).join('')+
+  `<label style="display:flex;gap:8px;align-items:center;font-size:13px"><input class="chk" type="checkbox" id="dc${p.i}" ${done[p.i]?'checked':''}> Já abordei</label>`;
+ document.getElementById('dc'+p.i).onchange=ev=>{if(ev.target.checked)done[p.i]=true;else delete done[p.i];saveDone();render()};
+ dlg.showModal();
+}
+syncControls();render();
+</script>
+</body></html>

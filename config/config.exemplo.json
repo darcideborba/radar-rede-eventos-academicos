@@ -1,0 +1,139 @@
+{
+  "_leia": "Copie este arquivo para config/config.json e ajuste. Nada aqui é específico de uma pessoa real.",
+  "evento": {
+    "nome": "EnANPAD 2026",
+    "local": "UNIFOR, Fortaleza/CE",
+    "periodo": "22 a 25/09/2026",
+    "pasta_agenda": "agendas/enanpad-2026",
+    "rotulos_dias": {
+      "22/09/2026": "Terça, 22 de setembro (pré-evento)",
+      "23/09/2026": "Quarta, 23 de setembro",
+      "24/09/2026": "Quinta, 24 de setembro",
+      "25/09/2026": "Sexta, 25 de setembro"
+    },
+    "divisoes": {
+      "APB": "Administração Pública",
+      "ATI": "Tecnologia da Informação",
+      "CON": "Contabilidade",
+      "EDP": "Ensino e Pesquisa",
+      "EOR": "Estudos Organizacionais",
+      "ESO": "Estratégia",
+      "FIN": "Finanças",
+      "GOL": "Operações e Logística",
+      "GPR": "Gestão de Pessoas",
+      "INTERDIVISIONAL": "Interdivisional",
+      "ITE": "Inovação e Empreendedorismo",
+      "MKT": "Marketing",
+      "PTT": "EnANPAD Profissional"
+    },
+    "aliases_instituicoes": {
+      "_nota": "Unifique grafias de uma mesma instituição; null descarta o rótulo.",
+      "Instituto de Pesquisa Econômica Aplicada": "Ipea",
+      "IPEA": "Ipea",
+      "Universidade Federal do Acre": "UFAC",
+      "Não tenho": null,
+      "não se aplica": null
+    }
+  },
+  "pesquisador": {
+    "nome_na_agenda": "NOME COMPLETO COMO APARECE NA AGENDA",
+    "_nota": "Usado apenas para localizar as sessões do próprio pesquisador e excluí-lo das listas. Se não participar do evento, deixe em branco."
+  },
+  "aderencia": {
+    "_nota": "Expressões regulares aplicadas ao texto SEM acentos e em minúsculas. Ajuste aos interesses de pesquisa do pesquisador.",
+    "sessoes_nucleo": [
+      "governo digital",
+      "transformacao digital",
+      "inteligencia artificial",
+      "capacidades estatais",
+      "inovacao no setor publico",
+      "inovacao publica",
+      "gestao do conhecimento",
+      "governanca de dados"
+    ],
+    "sessoes_adjacentes": [
+      "intelig",
+      "\\bia\\b",
+      "digital",
+      "dados",
+      "algoritm",
+      "capacidad",
+      "conhecimento",
+      "inovacao",
+      "tecnolog",
+      "automa",
+      "plataforma",
+      "governanca",
+      "public"
+    ],
+    "titulos_trabalhos": [
+      "governo digital",
+      "transformacao digital",
+      "setor publico",
+      "administracao publica",
+      "inteligencia artificial",
+      "\\bia\\b",
+      "algoritm",
+      "dados",
+      "capacidades",
+      "conhecimento",
+      "inovacao"
+    ],
+    "afiliacoes_prioritarias": [
+      "ministerio",
+      "secretaria",
+      "tribunal de contas",
+      "controladoria",
+      "escola de governo",
+      "agencia nacional",
+      "prefeitura",
+      "governo do estado",
+      "banco central"
+    ],
+    "temas_rotulos": {
+      "Transformação digital / governo digital": "governo digital|governo eletronico|transformacao digital|digitaliza|govtech",
+      "Inteligência artificial / algoritmos": "intelig|\\bia\\b|\\bai\\b|algoritm|llm|generativ|chatbot|automa",
+      "Dados e analytics": "dados|analytics|big data|\\bdata\\b",
+      "Gestão do conhecimento": "conhecimento|memoria organizacional|knowledge",
+      "Capacidades estatais / dinâmicas": "capacidade|capabilit",
+      "Inovação no setor público": "inovacao (no setor|publica)|laboratori",
+      "Governança, transparência e controle": "governanca|transparen|accountab|controle|auditoria",
+      "Administração pública / Estado": "setor publico|administracao publica|gestao publica|governo|estado|municip"
+    }
+  },
+  "pesos": {
+    "sessao_nucleo": 6,
+    "sessao_adjacente": 2,
+    "titulo_aderente": 1.5,
+    "max_titulos": 3,
+    "afiliacao_prioritaria": 3,
+    "divisao_bonus": {
+      "APB": 1
+    },
+    "mesma_sessao_do_pesquisador": 20,
+    "papel": {
+      "Palestrante": 5,
+      "Painelista": 4,
+      "Proponente": 4,
+      "Coordenador": 4,
+      "Coordenador/Debatedor": 4,
+      "Moderador": 4,
+      "Editor": 4,
+      "Diretoria ANPAD": 4,
+      "Debatedor": 3,
+      "Mentor": 3,
+      "Ministrante": 3,
+      "Organizador": 3,
+      "Facilitador": 2,
+      "Autor": 1,
+      "Autor (PDW)": 1,
+      "Participante": 1,
+      "Mentorado": 1
+    }
+  },
+  "cortes": {
+    "minimo_para_listar": 10,
+    "prioridade_A": 13,
+    "prioridade_B": 11.5
+  }
+}

@@ -1,0 +1,8 @@
+# Dados pessoais e resultados: nunca versionar
+dados/
+saida/
+config/config.json
+config/revisao_manual.csv
+config/perfis_localizados.json
+__pycache__/
+*.pyc
