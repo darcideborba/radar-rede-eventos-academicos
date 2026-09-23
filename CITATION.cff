@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "Se usar este material, cite-o conforme os metadados abaixo."
+type: software
+title: "Radar de rede em eventos acadêmicos"
+abstract: "Pipeline reprodutível que cruza a programação de um evento acadêmico com a rede LinkedIn de um pesquisador, gerando painel HTML e planilha com prioridade A/B/C e filtro por instituição. Inclui prompt, scripts Python e, como exemplo, a Programação Detalhada do EnANPAD 2026. Os arquivos PDF da programação do EnANPAD 2026 (pasta agendas/enanpad-2026) são de autoria da ANPAD e não estão cobertos pela licença MIT deste repositório."
+authors:
+  - family-names: "Santos Júnior"
+    given-names: "Darci de Borba"
+    affiliation: "Instituto de Pesquisa Econômica Aplicada (Ipea)"
+    orcid: "https://orcid.org/0000-0001-9851-5034"
+version: "1.0.0"
+date-released: "2026-09-23"
+repository-code: "https://github.com/darcideborba/radar-rede-eventos-academicos"
+license: MIT
+keywords:
+  - "eventos acadêmicos"
+  - "EnANPAD"
+  - "redes profissionais"
+  - "LinkedIn"
+  - "Python"
+  - "pesquisa acadêmica"
